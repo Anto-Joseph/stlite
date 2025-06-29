@@ -1,0 +1,43 @@
+credentials:
+  usernames:
+    jsmith:
+      email: jsmith@gmail.com
+      name: John Smith
+      password: abc # To be replaced with hashed password
+      roles: xxx
+    rbriggs:
+      email: rbriggs@gmail.com
+      name: Rebecca Briggs
+      password: def # To be replaced with hashed password
+      roles: xxx
+    admin:
+      email: rbriggs@gmail.com
+      name: System Admin
+      password: admin # To be replaced with hashed password
+      roles: admin
+
+    alan:
+      email: rbriggs@gmail.com
+      name: Alan Picard
+      password: alan # To be replaced with hashed password
+      roles: supervisor
+
+    lar:
+      email: rbriggs@gmail.com
+      name: Lar Murphy
+      password: lar # To be replaced with hashed password
+      roles: supervisor
+
+    anto:
+      email: rbriggs@gmail.com
+      name: Antony Joseph
+      password: anto # To be replaced with hashed password
+      roles: planner
+
+cookie:
+  expiry_days: 30
+  key: random_signature_key # Must be string
+  name: random_cookie_name
+preauthorized:
+  emails:
+    - melsby@gmail.com
