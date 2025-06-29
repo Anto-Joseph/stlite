@@ -39,8 +39,7 @@ if st.button("Add New", icon="➕") :
 
 df = pd.read_sql_query("SELECT EmpID,EmpName from EMP", con)
 
-res = cursor.execute("SELECT EmpName FROM EMP")
-df = pd.DataFrame(res.fetchall())
+
 
 
 df_EmpAct = pd.DataFrame(
@@ -51,7 +50,7 @@ df_EmpAct = pd.DataFrame(
    ]
 )
 
-EmpList = df[0].to_list()
+EmpList = df["EmpName"]
 ActList = ['anto','Joe','tojo','goe','leo']
 
 # ----- Table -----
