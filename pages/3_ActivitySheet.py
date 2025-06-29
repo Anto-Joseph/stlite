@@ -6,7 +6,7 @@ import sqlite3
 st.title('Daily Work Sheet')
 # --- DATABASE CONNECTION ---
 
-con = sqlite3.connect("database.db")
+con = sqlite3.connect("database-1.db")
 
 
 # --- ---
@@ -30,28 +30,20 @@ def AddEmpAct(ActDate):
         #st.session_state.vote = {"newEmp": newEmp, "newAct": newAct}
         st.rerun()
 
-
+# ---- input date ----
 A_date = st.date_input("Select Input date")
 if st.button("Add New", icon="➕") :
     AddEmpAct(A_date)
 
 # ----- Table Data ---- 
 
-df = pd.read_sql_query("SELECT EmpID,EmpName from EMP", con)
-
-
-
-
-df_EmpAct = pd.DataFrame(
-    [
-       {"command": 'Admin', "Activity": "x", "Comments" : "Jamie Lawlore - Snagging Level 2.0"},
-       {"command": 'Lar Murphy', "Activity": "Lar Murphy", "Comments" : ""},
-       {"command": 'Joe Finnegan', "Activity": "Joe Finnegan", "Comments" : "fdfsdf"},
-   ]
-)
-
-EmpList = df["EmpName"]
-ActList = ['anto','Joe','tojo','goe','leo']
+df_empList = pd.read_sql_query("SELECT EmpID,EmpName,EmpStatus,EmpDesignation from EMP", con)
+df_actList = pd.read_sql_query("SELECT * from TASK", con)
+df_AllEmpActList = pd.read_sql_query(f"SELECT * from View_EmpTaskSheet WHERE TaskDate = '{A_date}'", con)
+df_EmpAct = df_AllEmpActList.filter(['EmpName','TaskDescription', 'Comments', 'EnteredBy'], axis=1)
+EmpList = df_empList["EmpName"]
+ActList = df_actList["TaskDescription"].to_list()
+print(ActList)
 
 # ----- Table -----
 
@@ -59,12 +51,12 @@ edited_df = st.data_editor(
     df_EmpAct, 
     num_rows="dynamic",
     column_config= {
-        "command" : st.column_config.SelectboxColumn("Employye Name", 
+        "EmpName" : st.column_config.SelectboxColumn("Employye Name", 
                                                       width = 'Medium', 
                                                       options= EmpList,
                                                       required=True,
                                                     ),
-      "Activity" : st.column_config.SelectboxColumn("Activity",
+      "TaskDescription" : st.column_config.SelectboxColumn("Activity",
                                                      width = 'large', 
                                                      options= ActList,
                                                      required=True,
