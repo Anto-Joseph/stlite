@@ -21,6 +21,7 @@ elif st.session_state.get('roles') == 'admin' :
 
     "Manage Timeshhets" : [
         st.Page("pages/3_ActivitySheet.py", title = "Daily Activity"),
+        st.Page("pages/4_Chats.py", title = "Messages"),
     ],
 }
 
@@ -36,6 +37,7 @@ elif st.session_state.get('roles') == 'supervisor' :
 
     "Manage Timeshhets" : [
         st.Page("pages/3_ActivitySheet.py", title = "Daily Activity"),
+        st.Page("pages/4_Chats.py", title = "Messages"),
     ],
 }
 
