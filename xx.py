@@ -47,3 +47,29 @@ WHERE condition;
 con = sqlite3.connect("database.db")
 df = pd.read_sql_query("SELECT * from EMPTASK", con)
 print(df.head())
+
+
+
+editor_state = st.session_state.get("EmpTaskTbl_Key", {})
+deletedList = editor_state.get("deleted_rows",{})
+deletedList
+deleted_df = df_EmpAct.iloc[deletedList]
+deleted_df
+deleteListToQuery = []
+for delID in deleted_df['TaskEmpID'].to_list() :
+  deleteListToQuery.append((delID,))
+
+print(type(deleteListToQuery))
+print(deleteListToQuery)
+del_query = """DELETE from EMPTASK where TaskEmpID = ?"""
+cursor.executemany(del_query, deleteListToQuery)
+con.commit()
+
+
+try :
+  del_query = """DELETE from EMPTASK where TaskEmpID = ?"""
+  cursor.executemany(del_query, deleteListToQuery)
+  con.commit()
+
+except sqlite3.Error as error:
+  print("Failed to delete multiple records from sqlite table", error)

@@ -19,16 +19,6 @@ cursor =  con.cursor()
 
 # ---- FUNCTIONS ---
 
-# Create de key
-if "EmpTaskTbl_Key" not in st.session_state:
-    st.session_state.dek = str(uuid.uuid4())
-
-def update_value():
-    """
-    Located on top of the data editor.
-    """
-    st.session_state.dek = str(uuid.uuid4())  # triggers reset
-
   # ---- TABLE CHANGE -----
 def process_changes():
     editor_state = st.session_state.get("EmpTaskTbl_Key", {})
@@ -46,23 +36,15 @@ def process_changes():
         data_add = pd.merge(added, df_taskList, how="inner", on=["TaskDescription"])
         data_add = pd.merge(data_add, df_empList, how="inner", on=["EmpName"])
         data_add = data_add.filter(['EmpID','TaskID','TaskDate','Comments','EnteredBy','TaskDate'])
+        data_add.set_index('EmpID')
         data_add.to_sql(name='EMPTASK', if_exists="append", con = con, index=False)
       except sqlite3.Error as error:
-        rows_to_delete = 1
-        print("Failed to add record : ", error)    
-        st.toast('Employe Alread Entered!', icon='☠️')
-        time.sleep(.5)
-        empTaskDatabase_df =  pd.read_sql_query(f"SELECT EmpID from EMPTASK WHERE TaskDate = '{A_date}'", con)
+        df_EmpAct = df_AllEmpActList.filter(['TaskEmpID','EmpName','TaskDescription', 'Comments', 'EnteredBy','TaskDate'], axis=1)
         st.write(empTaskDatabase_df)
+        data_add.set_index('EmpID')
         st.write(data_add)
-        merged = pd.merge(empTaskDatabase_df["EmpID"], data_add["EmpID"], on=["EmpID"], how='inner')
-        st.write(merged)
-        st.query_params.clear()
-
-
-
-      finally:
-        update_value()
+        inner_merged = pd.merge(empTaskDatabase_df["EmpID"], data_add["EmpID"], on=["EmpID"], how='inner')
+        st.write(inner_merged)
 
 
 
@@ -146,4 +128,3 @@ edited_df = st.data_editor(
     column_order=("EmpName", "TaskDescription","Comments","EnteredBy"),
 
 )
-
