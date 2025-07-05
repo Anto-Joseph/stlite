@@ -23,6 +23,7 @@ elif st.session_state.get('roles') == 'admin' :
         st.Page("pages/3_ActivitySheet.py", title = "Daily Activity"),
         st.Page("pages/4_Chats.py", title = "Messages"),
         st.Page("pages/test.py", title = "Testing"),
+        st.Page("pages/test2.py", title = "Testing2"),
     ],
 }
 

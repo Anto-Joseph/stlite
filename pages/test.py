@@ -4,7 +4,7 @@ import streamlit_authenticator as stauth
 import pandas as pd
 import sqlite3
 import time
-import uuid
+
 
 
 # ---- VARIABLE ----
@@ -25,6 +25,13 @@ def process_changes():
     edited = editor_state.get("edited_rows",{})
     added = editor_state.get("added_rows",{})
     deleted = editor_state.get("deleted_rows",{})
+    st.write("added")
+    added
+    st.write("edited")
+    edited
+    st.write("deleted")
+    deleted
+    
 
 
     # ---- ADD DATA TO DATABASE ---
@@ -36,15 +43,17 @@ def process_changes():
         data_add = pd.merge(added, df_taskList, how="inner", on=["TaskDescription"])
         data_add = pd.merge(data_add, df_empList, how="inner", on=["EmpName"])
         data_add = data_add.filter(['EmpID','TaskID','TaskDate','Comments','EnteredBy','TaskDate'])
-        data_add.set_index('EmpID')
         data_add.to_sql(name='EMPTASK', if_exists="append", con = con, index=False)
+        print(st.session_state.EmpTaskTbl_Key["added_rows"])
       except sqlite3.Error as error:
-        df_EmpAct = df_AllEmpActList.filter(['TaskEmpID','EmpName','TaskDescription', 'Comments', 'EnteredBy','TaskDate'], axis=1)
-        st.write(empTaskDatabase_df)
-        data_add.set_index('EmpID')
-        st.write(data_add)
-        inner_merged = pd.merge(empTaskDatabase_df["EmpID"], data_add["EmpID"], on=["EmpID"], how='inner')
-        st.write(inner_merged)
+        print(st.session_state.EmpTaskTbl_Key["added_rows"])       
+
+
+    #=====sample ====
+    if not added.empty:
+      data_add = pd.merge(added, df_taskList, how="inner", on=["TaskDescription"])
+      data_add = pd.merge(data_add, df_empList, how="inner", on=["EmpName"])
+      data_add = data_add.filter(['EmpID','TaskID','TaskDate','Comments','EnteredBy','TaskDate'])
 
 
 
@@ -92,12 +101,15 @@ if st.button("Add New", icon="➕") :
     AddEmpAct(A_date)
 
 # ----- Table Data ---- 
-
-df_empList = pd.read_sql_query("SELECT EmpID,EmpName,EmpStatus,EmpDesignation from EMP", con)
-df_taskList = pd.read_sql_query("SELECT * from TASK", con)
 df_AllEmpActList = pd.read_sql_query(f"SELECT * from View_EmpTaskSheet WHERE TaskDate = '{A_date}'", con)
 df_EmpAct = df_AllEmpActList.filter(['TaskEmpID','EmpName','TaskDescription', 'Comments', 'EnteredBy','TaskDate'], axis=1)
+
+# ---- Emp List list for dropdown from DB ----
+df_empList = pd.read_sql_query("SELECT EmpID,EmpName,EmpStatus,EmpDesignation from EMP", con)
 EmpList = df_empList["EmpName"]
+
+# ---- Task list for dropdown from DB ----
+df_taskList = pd.read_sql_query("SELECT * from TASK", con)
 TaskList = df_taskList["TaskDescription"].to_list()
 
 
