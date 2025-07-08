@@ -22,8 +22,8 @@ elif st.session_state.get('roles') == 'admin' :
     "Manage Timeshhets" : [
         st.Page("pages/3_ActivitySheet.py", title = "Daily Activity"),
         st.Page("pages/4_Chats.py", title = "Messages"),
-        st.Page("pages/test.py", title = "Testing"),
-        st.Page("pages/test2.py", title = "Testing2"),
+        st.Page("pages/5_test.py", title = "Testing"),
+        st.Page("pages/6_test2.py", title = "Testing2"),
     ],
 }
 
