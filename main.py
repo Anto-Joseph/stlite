@@ -3,7 +3,7 @@ import streamlit as st
 import streamlit_authenticator as stauth
 import yaml
 from yaml.loader import SafeLoader
-
+st.set_page_config(layout="wide")
 
 if st.session_state.get('authentication_status') is None:
     st.title("XYZ Company Name")
@@ -24,6 +24,7 @@ elif st.session_state.get('roles') == 'admin' :
         st.Page("pages/4_Chats.py", title = "Messages"),
         st.Page("pages/5_test.py", title = "Testing"),
         st.Page("pages/6_test2.py", title = "Testing2"),
+        st.Page("pages/test3-snowF.py", title = "Testing3"),
     ],
 }
 
