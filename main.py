@@ -3,6 +3,9 @@ import streamlit as st
 import streamlit_authenticator as stauth
 import yaml
 from yaml.loader import SafeLoader
+
+#st.cache_resource.clear()
+
 st.set_page_config(layout="wide")
 
 if st.session_state.get('authentication_status') is None:
@@ -10,6 +13,7 @@ if st.session_state.get('authentication_status') is None:
     pages = [st.Page("pages/1_Login.py", title="Create your account")]
     pg = st.navigation(pages)
     pg.run()
+
 
 elif st.session_state.get('roles') == 'admin' :
     st.write(f" *{st.session_state.get('name')}*")
@@ -56,3 +60,4 @@ else :
     pages = [st.Page("pages/1_Login.py", title="Create your account")]
     pg = st.navigation(pages)
     pg.run()
+
