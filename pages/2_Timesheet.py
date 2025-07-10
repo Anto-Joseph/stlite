@@ -49,7 +49,8 @@ if file_df != []:
         headerRow.T
         Xl_selectedSheetDF = Xl_selectedSheetDF.iloc[0:][headerRow['ColNum']]
         Xl_selectedSheetDF.columns = Xl_selectedSheetDF.iloc[Xl_SkipRowNo]
-        Xl_selectedSheetDF =  Xl_selectedSheetDF.iloc[Xl_SkipRowNo:]
+        Xl_selectedSheetDF =  Xl_selectedSheetDF.iloc[(Xl_SkipRowNo+1):]
+        #df = df[df['EPS'].notna()] - remove all nan rows from the ['EPS'] column
         Xl_selectedSheetDF
 
 
