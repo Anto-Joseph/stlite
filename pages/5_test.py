@@ -48,20 +48,48 @@ def process_changes():
         len(edited)
         edited = pd.DataFrame.from_dict(edited)
         edited
-        editedColID = edited.index[0]
+        editedCol = edited.index[0]
         editedRowID = edited.T.index[0]
 
-        deleteListToQuery = edited_df.iloc[editedRowID]['TaskEmpID']
-        editedColID
+        #edited Col ID
+        st.title('Column name')
+        update_TaskEmpID = edited_df.iloc[editedRowID]['TaskEmpID']
+        update_TaskEmpID
+        editedCol 
+
         #old value
-        edited_df.iloc[editedRowID][editedColID]
+        st.title('Old Value')
+        update_OldValue = edited_df.iloc[editedRowID][editedCol]
+        update_OldValue
         #new value
-        edited[ editedRowID][editedColID]
+        st.title('new Value')
+        update_NewValue = edited[ editedRowID][editedCol]
+        update_NewValue
+
+
+        #convert 'editedCol to Col ID
+        if editedCol == 'EmpName' :
+            editedColID = 'EmpID'
+            update_NewValueID  = df_empList.loc[df_empList['EmpName'] == update_NewValue,['EmpID']]
+            update_NewValueID = update_NewValueID.iloc[0,0]
+            update_NewValueID
+
+        elif editedCol == 'TaskDescription' :
+            editedColID = 'TaskID'
+            update_NewValueID  = df_taskList.loc[df_taskList['TaskDescription'] == update_NewValue,['TaskID']]
+            update_NewValueID = update_NewValueID.iloc[0,0]
+            update_NewValueID
+
+
+
+
         
         try:
-            del_query = """DELETE from EMPTASK where TaskEmpID = ?"""
-            cursor.executemany(del_query, deleteListToQuery)
-            #cursor.execute("UPDATE employees SET salary = ? WHERE id = ?", (90000, 1))
+            update_query = f"""UPDATE EMPTASK SET {editedColID} = ? WHERE TaskEmpID = ?"""
+            update_NewValueID
+            st.write(update_query)
+            #cursor.executemany(del_query, deleteListToQuery)
+            cursor.execute(update_query, (update_NewValueID, update_TaskEmpID))
             con.commit()
            
 
