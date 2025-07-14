@@ -42,8 +42,7 @@ def process_changes():
     cursor.executemany(del_query, deleteListToQuery)
     con.commit()
 
-
-
+    # ---- update session state to trigger table -----
     st.session_state["EmpTaskTbl_Key"] = str(uuid.uuid4())
 
 

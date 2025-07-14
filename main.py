@@ -20,15 +20,23 @@ elif st.session_state.get('roles') == 'admin' :
     pages = {
     "Dasboards" : [
         st.Page("pages/1_Login.py", title = "Home Login Page"),
-        st.Page("pages/2_Timesheet.py", title = "Add Timesheet"),
+        st.Page("pages/4_Chats.py", title = "Messages"),
+        
     ],
 
     "Manage Timeshhets" : [
+        st.Page("pages/2_Timesheet.py", title = "Daily Hours"),
         st.Page("pages/3_ActivitySheet.py", title = "Daily Activity"),
-        st.Page("pages/4_Chats.py", title = "Messages"),
+        
+
+        
+    ],
+    "Master Data" : [
+        st.Page("pages/5_Employee Master.py", title = "Employee Master"),
         st.Page("pages/5_test.py", title = "Testing"),
         st.Page("pages/6_test2.py", title = "Testing2"),
         st.Page("pages/test3-snowF.py", title = "Testing3"),
+        
     ],
 }
 
