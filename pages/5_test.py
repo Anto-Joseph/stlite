@@ -50,21 +50,14 @@ def process_changes():
         edited
         editedCol = edited.index[0]
         editedRowID = edited.T.index[0]
-
         #edited Col ID
         st.title('Column name')
         update_TaskEmpID = edited_df.iloc[editedRowID]['TaskEmpID']
-        update_TaskEmpID
-        editedCol 
 
         #old value
-        st.title('Old Value')
         update_OldValue = edited_df.iloc[editedRowID][editedCol]
-        update_OldValue
         #new value
-        st.title('new Value')
         update_NewValue = edited[ editedRowID][editedCol]
-        update_NewValue
 
 
         #convert 'editedCol to Col ID
@@ -72,23 +65,16 @@ def process_changes():
             editedColID = 'EmpID'
             update_NewValueID  = df_empList.loc[df_empList['EmpName'] == update_NewValue,['EmpID']]
             update_NewValueID = update_NewValueID.iloc[0,0]
-            update_NewValueID
 
         elif editedCol == 'TaskDescription' :
             editedColID = 'TaskID'
             update_NewValueID  = df_taskList.loc[df_taskList['TaskDescription'] == update_NewValue,['TaskID']]
             update_NewValueID = update_NewValueID.iloc[0,0]
-            update_NewValueID
-
-
 
 
         
         try:
             update_query = f"""UPDATE EMPTASK SET {editedColID} = ? WHERE TaskEmpID = ?"""
-            update_NewValueID
-            st.write(update_query)
-            #cursor.executemany(del_query, deleteListToQuery)
             cursor.execute(update_query, (update_NewValueID, update_TaskEmpID))
             con.commit()
            
