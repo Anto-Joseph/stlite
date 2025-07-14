@@ -28,19 +28,71 @@ def process_changes():
             data_add = data_add.filter(['EmpID','TaskID','TaskDate','Comments','EnteredBy','TaskDate'])
             data_add.to_sql(name='EMPTASK', if_exists="append", con = con, index=False)
         except sqlite3.Error as error:
+            st.warning(error)
             st.toast('Employe Alread Entered!', icon='🚩')
             time.sleep(.5)
 
 
     # ---- DELETE DATA FROM TABLE ---
-    deletedList = editor_state.get("deleted_rows",{})
-    deleted_df = st.session_state["EmpTaskDate"].iloc[deletedList]
-    deleteListToQuery = []
-    for delID in deleted_df['TaskEmpID'].to_list() :
-      deleteListToQuery.append((delID,))
-    del_query = """DELETE from EMPTASK where TaskEmpID = ?"""
-    cursor.executemany(del_query, deleteListToQuery)
-    con.commit()
+    if len(deleted) != 0:
+        deletedList = editor_state.get("deleted_rows",{})
+        deleted_df = st.session_state["EmpTaskDate"].iloc[deletedList]
+        deleteListToQuery = []
+        for delID in deleted_df['TaskEmpID'].to_list() :
+            deleteListToQuery.append((delID,))
+            try : 
+                del_query = """DELETE from EMPTASK where TaskEmpID = ?"""
+                cursor.executemany(del_query, deleteListToQuery)
+                con.commit()
+            except sqlite3.Error as error:
+                st.warning(error)
+                st.toast(error, icon='🚩')
+                time.sleep(.5)
+
+    # ----- EDITED -----
+    if len(edited) != 0:
+        len(edited)
+        edited = pd.DataFrame.from_dict(edited)
+        editedCol = edited.index[0]
+        editedRowID = edited.T.index[0]
+        #edited Col ID
+        st.title('Column name')
+        update_TaskEmpID = edited_df.iloc[editedRowID]['TaskEmpID']
+
+        #old value
+        update_OldValue = edited_df.iloc[editedRowID][editedCol]
+        #new value
+        update_NewValue = edited[ editedRowID][editedCol]
+
+
+        #convert 'editedCol to Col ID
+        if editedCol == 'EmpName' :
+            editedColID = 'EmpID'
+            update_NewValueID  = df_empList.loc[df_empList['EmpName'] == update_NewValue,['EmpID']]
+            update_NewValueID = update_NewValueID.iloc[0,0]
+
+        elif editedCol == 'TaskDescription' :
+            editedColID = 'TaskID'
+            update_NewValueID  = df_taskList.loc[df_taskList['TaskDescription'] == update_NewValue,['TaskID']]
+            update_NewValueID = update_NewValueID.iloc[0,0]
+
+
+        
+        try:
+            update_query = f"""UPDATE EMPTASK SET {editedColID} = ? WHERE TaskEmpID = ?"""
+            cursor.execute(update_query, (update_NewValueID, update_TaskEmpID))
+            con.commit()
+           
+
+        except sqlite3.Error as error:
+            st.warning(error)
+            st.toast(error, icon='🚩')
+            time.sleep(.5)
+    
+
+
+
+
 
     # ---- update session state to trigger table -----
     st.session_state["EmpTaskTbl_Key"] = str(uuid.uuid4())
@@ -89,7 +141,7 @@ edited_df = st.data_editor(
                                                      required=True,
                                                    ),
       "Comments" : st.column_config.Column("Comments", width = 'large',),
-      "EnteredBy" : st.column_config.TextColumn("Widgets", default= st.session_state.get("name")),
+      "EnteredBy" : st.column_config.TextColumn("Added By", default= st.session_state.get("name")),
 
     },
 

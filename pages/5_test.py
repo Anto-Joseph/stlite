@@ -34,20 +34,25 @@ def process_changes():
 
 
     # ---- DELETE DATA FROM TABLE ---
-    deletedList = editor_state.get("deleted_rows",{})
-    deleted_df = st.session_state["EmpTaskDate"].iloc[deletedList]
-    deleteListToQuery = []
-    for delID in deleted_df['TaskEmpID'].to_list() :
-      deleteListToQuery.append((delID,))
-    del_query = """DELETE from EMPTASK where TaskEmpID = ?"""
-    cursor.executemany(del_query, deleteListToQuery)
-    con.commit()
+    if len(deleted) != 0:
+        deletedList = editor_state.get("deleted_rows",{})
+        deleted_df = st.session_state["EmpTaskDate"].iloc[deletedList]
+        deleteListToQuery = []
+        for delID in deleted_df['TaskEmpID'].to_list() :
+            deleteListToQuery.append((delID,))
+            try : 
+                del_query = """DELETE from EMPTASK where TaskEmpID = ?"""
+                cursor.executemany(del_query, deleteListToQuery)
+                con.commit()
+            except sqlite3.Error as error:
+                st.warning(error)
+                st.toast(error, icon='🚩')
+                time.sleep(.5)
 
     # ----- EDITED -----
     if len(edited) != 0:
         len(edited)
         edited = pd.DataFrame.from_dict(edited)
-        edited
         editedCol = edited.index[0]
         editedRowID = edited.T.index[0]
         #edited Col ID
@@ -80,6 +85,7 @@ def process_changes():
            
 
         except sqlite3.Error as error:
+            st.warning(error)
             st.toast(error, icon='🚩')
             time.sleep(.5)
     

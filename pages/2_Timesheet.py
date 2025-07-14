@@ -9,9 +9,6 @@ import uuid
 import time
 
 
-#st.session_state['Upload_Key'] = str(uuid.uuid4())
-
-
 Xl_SkipColumns = []
 Xl_FormatDataType = 0
 Xl_EmpID = 0
